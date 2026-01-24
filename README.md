@@ -3,7 +3,9 @@
 --------------------------------------------
 全球一键安装脚本（github原仓库）：
 ```
-wget -qO- https://github.com/nightlightzero/alpine-openlist/blob/main/alpine-openlist.sh | ash
+wget -qO al.sh https://raw.githubusercontent.com/nightlightzero/alpine-openlist/main/alpine-openlist.sh
+ash al.sh
+
 ```
 
 国内一键安装脚本（ghproxy）:
