@@ -128,23 +128,3 @@ echo -e "初始密码：${YELLOW}$INIT_PWD${NC}"
 echo -e "------------------------------------------------"
 # -------------------------------------------------
 # -------------------------------------------------
-# -------------------------------------------------
-#  安装成功后可选：立即修改 admin 密码
-# -------------------------------------------------
-ask_reset_pwd(){
-    printf "\n${YELLOW}是否立即修改 admin 密码? [y/N]: ${NC}"
-    read -r ans
-    [ "$ans" != "y" ] && return
-    while :; do
-        printf "${YELLOW}请输入新密码（≥8位，输入不显示）: ${NC}"
-        read -s NP; echo
-        [ ${#NP} -ge 8 ] && break
-        printf "${RED}密码太短，重试${NC}\n"
-    done
-    if ./openlist admin set "$NP" >/dev/null 2>&1; then
-        printf "${GREEN}密码已更新！${NC}\n"
-    else
-        printf "${RED}修改失败，请稍后到 Web 端手动修改${NC}\n"
-    fi
-}
-ask_reset_pwd
