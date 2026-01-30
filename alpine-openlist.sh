@@ -79,7 +79,7 @@ else
                    echo -e "${RED}密码太短，重试${NC}"
                done
                # 官方唯一写法
-               if "$INSTALL_DIR/openlist" admin set "$NP" >/dev/null 2>&1; then
+               if ./openlist admin set "$NP" >/dev/null 2>&1; then
                    INIT_PWD="$NP"
                    echo -e "${GREEN}密码已更新！${NC}"
                else
@@ -141,7 +141,7 @@ ask_reset_pwd(){
         [ ${#NP} -ge 8 ] && break
         printf "${RED}密码太短，重试${NC}\n"
     done
-    if "$INSTALL_DIR/openlist" admin set "$NP" >/dev/null 2>&1; then
+    if ./openlist admin set "$NP" >/dev/null 2>&1; then
         printf "${GREEN}密码已更新！${NC}\n"
     else
         printf "${RED}修改失败，请稍后到 Web 端手动修改${NC}\n"
