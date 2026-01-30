@@ -55,6 +55,9 @@ timeout 12 "$INSTALL_DIR/openlist" server --data "$INSTALL_DIR/data" >"$TMPLOG" 
 # 立即抓密码
 INIT_PWD=$(awk -F'initial password is: ' 'NF>1{print $2; exit}' "$TMPLOG" | awk '{print $1}')
 
+# -------------------------------------------------
+#  没抓到密码时的双选菜单（官方命令版）
+# -------------------------------------------------
 if [ -n "$INIT_PWD" ]; then
     echo -e "${GREEN}已成功获取初始密码${NC}"
 else
@@ -69,13 +72,13 @@ else
                echo -e "${YELLOW}--- 日志结束 ---${NC}"
                break
                ;;
-            2) # 手动改密流程
-               while :; do
+            2) while :; do
                    printf "${YELLOW}请输入新密码（≥8位，输入不显示）：${NC}"
                    read -s NP; echo
                    [ ${#NP} -ge 8 ] && break
                    echo -e "${RED}密码太短，重试${NC}"
                done
+               # 官方唯一写法
                if "$INSTALL_DIR/openlist" admin set "$NP" >/dev/null 2>&1; then
                    INIT_PWD="$NP"
                    echo -e "${GREEN}密码已更新！${NC}"
@@ -87,8 +90,9 @@ else
             *) echo -e "${RED}无效选择，重试${NC}" ;;
         esac
     done
-    rm -f "$TMPLOG"   # 无论选哪项，看完就删
+    rm -f "$TMPLOG"
 fi
+
 
 
 
@@ -124,23 +128,23 @@ echo -e "初始密码：${YELLOW}$INIT_PWD${NC}"
 echo -e "------------------------------------------------"
 # -------------------------------------------------
 # -------------------------------------------------
-#  可选：立即修改 admin 密码（Alpine 最简兼容）
+# -------------------------------------------------
+#  安装成功后可选：立即修改 admin 密码
 # -------------------------------------------------
 ask_reset_pwd(){
     printf "\n${YELLOW}是否立即修改 admin 密码? [y/N]: ${NC}"
     read -r ans
     [ "$ans" != "y" ] && return
     while :; do
-        printf "${YELLOW}请输入新密码（≥8位，输入过程不显示）: ${NC}"
-        read -s NP                    # BusyBox 支持 read -s
-        echo                            # 换行
+        printf "${YELLOW}请输入新密码（≥8位，输入不显示）: ${NC}"
+        read -s NP; echo
         [ ${#NP} -ge 8 ] && break
         printf "${RED}密码太短，重试${NC}\n"
     done
     if "$INSTALL_DIR/openlist" admin set "$NP" >/dev/null 2>&1; then
         printf "${GREEN}密码已更新！${NC}\n"
     else
-        printf "${RED}修改失败，请稍后在 Web 端手动修改${NC}\n"
+        printf "${RED}修改失败，请稍后到 Web 端手动修改${NC}\n"
     fi
 }
 ask_reset_pwd
